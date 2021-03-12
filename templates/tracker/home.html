@@ -1,0 +1,105 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<h4>Table Form</h4>
+<!-- method (1) form -->
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <label> Name of the task</label>
+        <input type="text" name="name">
+    </div>
+    <div>
+        <label> Planning Time</label>
+        <input type="time" name="planning">
+    </div>
+    <div>
+        <label> Self Estimated Time</label>
+        <input type="time" name="estimated">
+    </div>
+    <div>
+        <label> Real Time spent</label>
+        <input type="time" name="real">
+    </div>
+    <div>
+        <label> Risk</label>
+        <select name="risk">
+            <option value="-" selected>--</option>
+            <option value="not risky">Not risky</option>
+            <option value="risky">Risky</option>
+            <option value="very risky">Very risky</option>
+        </select>
+    </div>
+    <div>
+        <label> Level</label>
+        <select name="level">
+            <option value="-" selected>--</option>
+            <option value="easy" >Easy</option>
+            <option value="medium" >Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+    </div>
+    <div>
+        <label> Notes </label>
+        <input type="text" name="notes">
+    </div>
+    
+    <button type="submit">Calc</button>
+</form>
+<!-- method (2) form -->
+<!--
+<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Calc</button>
+</form>
+-->
+
+<h1> Table </h1>
+
+
+<table>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Planning Time
+        </th>
+        <th>
+            Self Estimated Time
+        </th>
+        <th>
+            Estimated Time By Calc
+        </th>
+        <th>
+            Real Time HH:SS
+        </th>
+        <th>
+            Risk
+        </th>
+        <th>
+            Level
+        </th>
+        <th>
+            Correctness
+        </th>
+        <th>
+            Notes
+        </th>
+    {% for data in data %}
+    <tr>
+        <td>{{ data.name }}</td>
+        <td>{{data.planning}}</td>
+        <td>{{ data.estimate }}</td>
+        <td>{{ data.calc }}</td>
+        <td>{{ data.realtime }}</td>
+        <td>{{ data.risk }}</td>
+        <td>{{ data.level }}</td>
+        <td>172%</td>
+        <td>{{ data.notes }}</td>
+    </tr>
+    {%endfor%}
+</table>
+{% endblock %}
