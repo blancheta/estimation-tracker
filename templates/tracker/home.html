@@ -1,52 +1,57 @@
 {% extends 'main.html' %}
 {% load static %}
 {% block content %}
-
-<h4>Table Form</h4>
+<div class="row container">
+    <div class="col-lg-4">
+<h1 class="text-center">Table Form</h1>
 <!-- method (1) form -->
-<form method="POST">
+
+<form method="POST" class="text-center">
     {% csrf_token %}
-    <div>
+    <div class="form-group ">
         <label> Name of the task</label>
-        <input type="text" name="name">
+        <input class="form-control" type="text" name="name" required>
     </div>
-    <div>
+    <div class="form-group ">
         <label> Planning Time</label>
-        <input type="time" name="planning">
+        <input class="form-control" type="time" name="planning" required>
     </div>
-    <div>
+    <div class="form-group ">
         <label> Self Estimated Time</label>
-        <input type="time" name="estimated">
+        <input class="form-control" type="time" name="estimated" required>
     </div>
-    <div>
+    <div class="form-group ">
         <label> Real Time spent</label>
-        <input type="time" name="real">
+        <input class="form-control" type="time" name="real" required>
     </div>
-    <div>
+    <div class="form-group">
         <label> Risk</label>
-        <select name="risk">
+        <select class="custom-select" name="risk">
             <option value="-" selected>--</option>
             <option value="not risky">Not risky</option>
             <option value="risky">Risky</option>
             <option value="very risky">Very risky</option>
         </select>
     </div>
-    <div>
+    <div class="form-group ">
         <label> Level</label>
-        <select name="level">
+        <select class="custom-select" name="level">
             <option value="-" selected>--</option>
             <option value="easy" >Easy</option>
             <option value="medium" >Medium</option>
             <option value="hard">Hard</option>
         </select>
     </div>
-    <div>
+    <div class="form-group ">
         <label> Notes </label>
-        <input type="text" name="notes">
+        <input class="form-control" type="text" name="notes" required>
     </div>
     
-    <button type="submit">Calc</button>
+    <button class="btn btn-primary " type="submit">Calcul</button>
 </form>
+</div>
+
+
 <!-- method (2) form -->
 <!--
 <form method="POST">
@@ -55,51 +60,59 @@
     <button type="submit">Calc</button>
 </form>
 -->
+<div class="col-lg-5 ">
+<h1 class="text-center"> Table </h1>
 
-<h1> Table </h1>
-
-
-<table>
+<table class="table table-striped table-bordered">
+    <thead>
     <tr>
-        <th>
+        <th scope="col">
             Name
         </th>
-        <th>
+        <th scope="col">
             Planning Time
         </th>
-        <th>
+        <th scope="col">
             Self Estimated Time
         </th>
-        <th>
+        <th scope="col">
             Estimated Time By Calc
         </th>
-        <th>
+        <th scope="col">
             Real Time HH:SS
         </th>
-        <th>
+        <th scope="col">
             Risk
         </th>
-        <th>
+        <th scope="col">
             Level
         </th>
-        <th>
+        <th scope="col">
             Correctness
         </th>
-        <th>
+        <th scope="col">
             Notes
         </th>
+    </thead>
+
+    <tbody>
     {% for data in data %}
+    
     <tr>
         <td>{{ data.name }}</td>
         <td>{{data.planning}}</td>
         <td>{{ data.estimate }}</td>
-        <td>{{ data.calc }}</td>
+        <td>{{ data.estimateb_by_calc }}</td>
         <td>{{ data.realtime }}</td>
         <td>{{ data.risk }}</td>
         <td>{{ data.level }}</td>
-        <td>172%</td>
+        <td>{{ data.correctness }}%</td>
         <td>{{ data.notes }}</td>
     </tr>
     {%endfor%}
+</tbody>
 </table>
+
+</div>
+</div>
 {% endblock %}
