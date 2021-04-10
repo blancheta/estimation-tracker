@@ -1,13 +1,21 @@
+from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
-from .models import *
+from .models import Task
 from .forms import *
 from datetime import datetime, timedelta
 
 # Create your views here.
 # This method (1)
+class TaskView(TemplateView):
+    template_name = 'tracker/home.html'
 
-def home(request):
-    if request.method == "POST":
+    
+    def get(self, request):
+        data = Task.objects.all()
+        context = {'data':data,}
+        return render (request,self.template_name, context)
+
+    def post(self, request):
         name = request.POST['name']
         planning = request.POST['planning']
         estimated = request.POST['estimated']
@@ -39,11 +47,8 @@ def home(request):
         correctness=correctness,
         )
         table.save()
-    data = Task.objects.all()
+        return redirect('/')
 
-
-    context = {'data':data,}
-    return render (request,'tracker/home.html', context)
 
 
 # Or this (2)
