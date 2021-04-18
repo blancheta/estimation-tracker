@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from .models import Task
 from .forms import *
 from datetime import datetime, timedelta
@@ -47,7 +48,7 @@ class TaskView(TemplateView):
         correctness=correctness,
         )
         table.save()
-        return redirect('/')
+        return redirect(reverse('home'))
 
 
 
