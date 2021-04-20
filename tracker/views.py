@@ -13,7 +13,16 @@ class TaskView(TemplateView):
     
     def get(self, request):
         data = Task.objects.all()
-        context = {'data':data,}
+        total_correctness = 0
+        liste = []
+        for _data in data:
+            liste.append(_data.correctness)
+        for x in liste:
+            total_correctness = x + total_correctness
+
+        moyenne_correctness = round(total_correctness / len(liste), 3)
+
+        context = {'data':data, 'moyenne_correctness': moyenne_correctness}
         return render (request,self.template_name, context)
 
     def post(self, request):
