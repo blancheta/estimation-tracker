@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 
 # Create your views here.
 # This method (1)
+"""
 class TaskView(TemplateView):
     template_name = 'tracker/home.html'
 
@@ -63,19 +64,70 @@ class TaskView(TemplateView):
         table.save()
         return redirect(reverse('home'))
 
-
-
-# Or this (2)
 """
-def home(request):
-    form = DataForm()
-    if request.method == "POST":
+
+# Or this method (2)
+class TaskView(TemplateView):
+    template_name = 'tracker/home.html'
+
+
+    # get: displays the page and the data therein
+    def get(self, request):
+        data = Task.objects.all()
+        form = DataForm()
+        # averaging
+        total_correctness = 0
+        liste = []
+        for _data in data:
+            liste.append(_data.correctness)
+        for x in liste:
+            total_correctness = x + total_correctness
+
+        moyenne_correctness = round(total_correctness / len(liste), 3)
+
+        context = {'data':data, 'form':form, 'moyenne_correctness': moyenne_correctness}
+        return render (request,self.template_name, context)
+
+    # post: retrieves the form data to save and reload the home page
+    def post(self, request):
+        form = DataForm()
         form = DataForm(request.POST)
+        
         if form.is_valid:
-            form.save()
-            return redirect('/')
+            #------------------------------------------------------------------------------------#
+            # save form data with commit=False. If commit= False, data haven't add in database
+            # form.data is QueryDict and is not mutable. I cann't save it with less data
+            # I cann't add out-of-form data as estimateb_by_calc and correctness
+            #------------------------------------------------------------------------------------#
+            form.save(commit=False)
+            
+            # calculation of estimateb_by_calc and correctness from user data
+            estimated_dt = datetime.strptime(form.data["estimate"], '%H:%M')
+            realtime_dt = datetime.strptime(form.data["realtime"], '%H:%M')
 
-    data = Task.objects.all()
-    context = {'data': data, 'form': form}
-    return render(request, 'tracker/home.html', context)
-"""
+            estimated_duration_td = timedelta(hours=estimated_dt.hour, minutes=estimated_dt.minute)
+            realtime_duration_td = timedelta(hours=realtime_dt.hour, minutes=realtime_dt.minute)
+
+            diff_td = realtime_duration_td - estimated_duration_td
+            seconds = diff_td.seconds
+            estimateb_by_calc = f"{int(seconds / 3600)}"+f': {(int(seconds / 60)) % 60} '
+            correctness = 100 * realtime_duration_td.seconds / estimated_duration_td.seconds
+
+            
+            # Now, I recover with form.data['data_name_in_form'] the non-mutable data of the form
+            # and I add correctness and estimateb_by_calc
+            # I save all data in Task (in database)
+            table = Task(
+                name=form.data['name'],
+                planning=form.data['planning'],
+                estimate=form.data['estimate'],
+                realtime=form.data['realtime'],
+                risk=form.data['risk'],
+                level=form.data['level'],
+                notes=form.data['notes'],
+                estimateb_by_calc=estimateb_by_calc,
+                correctness=correctness,
+            )
+            table.save()
+        return redirect(reverse('home'))
+

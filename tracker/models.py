@@ -26,8 +26,8 @@ class Task(models.Model):
     risk = models.CharField(max_length=100, null=True, choices=RISK)
     level = models.CharField(max_length=100, null=True, choices=LEVEL)
     notes = models.CharField(max_length=253, null=True)
-    estimateb_by_calc = models.CharField(max_length=253, null=True)
-    correctness = models.IntegerField(null=True)
+    estimateb_by_calc = models.CharField(max_length=253, null=True, default='00:00')
+    correctness = models.IntegerField(null=True, default=0)
 
     # realtime = models.CharField(max_length=100, null=True)
 
