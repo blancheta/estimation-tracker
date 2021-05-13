@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Task
 from .forms import *
-from datetime import datetime, timedelta
+from .calculated import *
 
 # Create your views here.
 # This method (1)
@@ -74,7 +74,7 @@ class TaskView(TemplateView):
     # get: displays the page and the data therein
     def get(self, request):
         data = Task.objects.all()
-        form = DataForm()
+        form = CreateTaskForm()
         # averaging
         total_correctness = 0
         liste = []
@@ -90,44 +90,23 @@ class TaskView(TemplateView):
 
     # post: retrieves the form data to save and reload the home page
     def post(self, request):
-        form = DataForm()
-        form = DataForm(request.POST)
+        form = CreateTaskForm()
+        form = CreateTaskForm(request.POST)
         
-        if form.is_valid:
+        if form.is_valid():
             #------------------------------------------------------------------------------------#
             # save form data with commit=False. If commit= False, data haven't add in database
-            # form.data is QueryDict and is not mutable. I cann't save it with less data
-            # I cann't add out-of-form data as estimateb_by_calc and correctness
             #------------------------------------------------------------------------------------#
-            form.save(commit=False)
             
-            # calculation of estimateb_by_calc and correctness from user data
-            estimated_dt = datetime.strptime(form.data["estimate"], '%H:%M')
-            realtime_dt = datetime.strptime(form.data["realtime"], '%H:%M')
+            instance =  form.save(commit=False)
 
-            estimated_duration_td = timedelta(hours=estimated_dt.hour, minutes=estimated_dt.minute)
-            realtime_duration_td = timedelta(hours=realtime_dt.hour, minutes=realtime_dt.minute)
+            # caclulate estimation and correctness
+            estimateb_by_calc=calc_estimation_time(form.data["estimate"], form.data["realtime"])
+            correctness=calc_correctness(form.data["estimate"], form.data["realtime"])
 
-            diff_td = realtime_duration_td - estimated_duration_td
-            seconds = diff_td.seconds
-            estimateb_by_calc = f"{int(seconds / 3600)}"+f': {(int(seconds / 60)) % 60} '
-            correctness = 100 * realtime_duration_td.seconds / estimated_duration_td.seconds
+            # save estimation and correctness in instance
+            instance.estimateb_by_calc = estimateb_by_calc
+            instance.correctness = correctness
+            instance.save()
 
-            
-            # Now, I recover with form.data['data_name_in_form'] the non-mutable data of the form
-            # and I add correctness and estimateb_by_calc
-            # I save all data in Task (in database)
-            table = Task(
-                name=form.data['name'],
-                planning=form.data['planning'],
-                estimate=form.data['estimate'],
-                realtime=form.data['realtime'],
-                risk=form.data['risk'],
-                level=form.data['level'],
-                notes=form.data['notes'],
-                estimateb_by_calc=estimateb_by_calc,
-                correctness=correctness,
-            )
-            table.save()
         return redirect(reverse('home'))
-

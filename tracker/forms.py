@@ -4,10 +4,10 @@ from .models import *
 from django.utils.translation import gettext_lazy
 
 # form to post request
-class DataForm(ModelForm):
+class CreateTaskForm(ModelForm):
     class Meta:
         model = Task
-        fields = {
+        fields = [
         'name', 
         'planning', 
         'estimate', 
@@ -15,8 +15,9 @@ class DataForm(ModelForm):
         'risk', 
         'level', 
         'notes', 
-        'estimateb_by_calc', 'correctness'
-        }
+        'estimateb_by_calc',
+        'correctness'
+        ]
         labels = {
         	'name': gettext_lazy('Name of the task'),
         	'planning': gettext_lazy('Planning Time'),

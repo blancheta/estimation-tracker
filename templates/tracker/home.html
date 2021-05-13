@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row container">
     <div class="col-lg-4">
-        <h1 class="text-center">Table Form</h1>
+        <h1 class="text-center">Task add Form</h1>
 
         <!-- Data recovery form to add to the database -->
         <!-- method (1) form -->
@@ -58,7 +58,7 @@
             {% csrf_token %}
             <div class="form-group">
                 {{form.as_p}}
-                <button class="btn btn-primary" type="submit">Calcul</button>
+                <button class="btn btn-primary" type="submit">Create a new task</button>
             </div>
         </form>
     </div>
