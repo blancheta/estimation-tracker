@@ -7,16 +7,16 @@ class CreateTaskForm(ModelForm):
     class Meta:
         model = Task
         fields = [
-        'name', 
-        'planning', 
-        'estimate', 
-        'realtime', 
-        'risk', 
-        'level', 
-        'notes', 
-        'estimateb_by_calc',
-        'correctness'
-        ]
+            'name', 
+            'planning', 
+            'estimate', 
+            'realtime', 
+            'risk', 
+            'level', 
+            'notes', 
+            'estimateb_by_calc',
+            'correctness',
+            ]
         labels = {
         	'name': 'Name of the task',
         	'planning': 'Planning Time',
@@ -25,7 +25,7 @@ class CreateTaskForm(ModelForm):
         	'risk': 'Risk',
         	'level': 'Level',
             'notes': 'Notes',
-        }
+            }
         widgets = {
             'name': TextInput(attrs={'class': 'form-control'}),
             'planning': TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
@@ -36,4 +36,4 @@ class CreateTaskForm(ModelForm):
             'notes': TextInput(attrs={'class': 'form-control'}),
             'estimateb_by_calc': HiddenInput(),
             'correctness': HiddenInput(),
-        }
+            }
