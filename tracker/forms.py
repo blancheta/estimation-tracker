@@ -1,7 +1,6 @@
 from django.forms import *
 from django import forms
 from .models import *
-from django.utils.translation import gettext_lazy
 
 # form to post request
 class CreateTaskForm(ModelForm):
@@ -19,13 +18,13 @@ class CreateTaskForm(ModelForm):
         'correctness'
         ]
         labels = {
-        	'name': gettext_lazy('Name of the task'),
-        	'planning': gettext_lazy('Planning Time'),
-        	'estimate': gettext_lazy('Self Estimated Time'),
-        	'realtime': gettext_lazy('Real Time spent'),
-        	'risk': gettext_lazy('Risk'),
-        	'level': gettext_lazy('Level'),
-            'notes': gettext_lazy('Notes'),
+        	'name': 'Name of the task',
+        	'planning': 'Planning Time',
+        	'estimate': 'Self Estimated Time',
+        	'realtime': 'Real Time spent',
+        	'risk': 'Risk',
+        	'level': 'Level',
+            'notes': 'Notes',
         }
         widgets = {
             'name': TextInput(attrs={'class': 'form-control'}),

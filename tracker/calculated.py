@@ -11,8 +11,8 @@ def calc_estimation_time(estimate, realtime):
 
     diff_td = realtime_duration_td - estimated_duration_td
     seconds = diff_td.seconds
-    estimateb_by_calc = f"{int(seconds / 3600)}"+f': {(int(seconds / 60)) % 60} '
-    return estimateb_by_calc
+    estimate_by_calc = f"{int(seconds / 3600)}"+f': {(int(seconds / 60)) % 60} '
+    return estimate_by_calc
 
 
 def calc_correctness(estimate, realtime):
