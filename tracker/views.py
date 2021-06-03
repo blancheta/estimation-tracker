@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Task
 from .forms import *
-from .calculated import *
+from .utils import *
 
 # Create your views here.
 # This method (1)
@@ -89,7 +89,8 @@ class TaskView(TemplateView):
         return render (request,self.template_name, context)
 
     # post: retrieves the form data to save and reload the home page
-    def post(self, request):
+    def post(self, request, commit=True):
+        
         form = CreateTaskForm()
         form = CreateTaskForm(request.POST)
         
@@ -97,16 +98,10 @@ class TaskView(TemplateView):
             #------------------------------------------------------------------------------------#
             # save form data with commit=False. If commit= False, data haven't add in database
             #------------------------------------------------------------------------------------#
-            
-            instance =  form.save(commit=False)
-
-            # caclulate estimation and correctness
-            estimateb_by_calc=calc_estimation_time(form.data["estimate"], form.data["realtime"])
-            correctness=calc_correctness(form.data["estimate"], form.data["realtime"])
-
-            # save estimation and correctness in instance
-            instance.estimateb_by_calc = estimateb_by_calc
-            instance.correctness = correctness
-            instance.save()
-
+            instance = form.save(commit=False)
+            # calculate estimation & correctness and save estimation and correctness in instance
+            instance.estimateb_by_calc = calc_estimation_time(form.cleaned_data["estimate"], form.cleaned_data["realtime"])
+            instance.correctness = calc_correctness(form.cleaned_data["estimate"], form.cleaned_data["realtime"])
+            if commit:
+                instance.save()
         return redirect(reverse('home'))
