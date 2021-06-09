@@ -69,8 +69,6 @@ class TaskView(TemplateView):
 # Or this method (2)
 class TaskView(TemplateView):
     template_name = 'tracker/home.html'
-
-
     # get: displays the page and the data therein
     def get(self, request):
         data = Task.objects.all()
@@ -89,19 +87,7 @@ class TaskView(TemplateView):
         return render (request,self.template_name, context)
 
     # post: retrieves the form data to save and reload the home page
-    def post(self, request, commit=True):
-        
-        form = CreateTaskForm()
+    def post(self, request):
         form = CreateTaskForm(request.POST)
-        
-        if form.is_valid():
-            #------------------------------------------------------------------------------------#
-            # save form data with commit=False. If commit= False, data haven't add in database
-            #------------------------------------------------------------------------------------#
-            instance = form.save(commit=False)
-            # calculate estimation & correctness and save estimation and correctness in instance
-            instance.estimateb_by_calc = calc_estimation_time(form.cleaned_data["estimate"], form.cleaned_data["realtime"])
-            instance.correctness = calc_correctness(form.cleaned_data["estimate"], form.cleaned_data["realtime"])
-            if commit:
-                instance.save()
+        form.save()
         return redirect(reverse('home'))

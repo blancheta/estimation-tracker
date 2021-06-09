@@ -1,6 +1,7 @@
 from django.forms import *
 from django import forms
 from .models import *
+from .utils import *
 
 # form to post request
 class CreateTaskForm(ModelForm):
@@ -37,3 +38,16 @@ class CreateTaskForm(ModelForm):
             'estimateb_by_calc': HiddenInput(),
             'correctness': HiddenInput(),
             }
+
+    def save (self, *args,commit=True):
+        #------------------------------------------------------------------------------------#
+        # save form data with commit=False. If commit= False, data haven't add in database
+        #------------------------------------------------------------------------------------#
+        instance = super(CreateTaskForm, self).save(*args, commit=False)
+        if self.is_valid():
+            # calculate estimation & correctness and save estimation and correctness in instance
+            instance.estimateb_by_calc = calc_estimation_time(self.cleaned_data["estimate"], self.cleaned_data["realtime"])
+            instance.correctness = calc_correctness(self.cleaned_data["estimate"], self.cleaned_data["realtime"])
+            if commit:
+                instance.save()
+        return instance
