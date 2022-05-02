@@ -1,6 +1,28 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from tracker.forms import TaskForm
+from tracker.models import Task
+    
+def home(request):
+    
+    context = {
+        'tasks': Task.objects.all()
+    }
+    
+    return render(request, 'home.html', context)
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+def create_task(request):
+    
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        
+        if form.is_valid():
+            form.save()
+
+        return redirect('home')
+    
+    context = {
+        'form' : TaskForm()
+    }
+    
+    return render(request, 'create_task.html', context)

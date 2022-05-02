@@ -1,0 +1,38 @@
+{% load custom_tags %}
+
+<a href={% url 'create_task' %}>Create Task</a>
+
+
+{% if tasks %}
+
+    <table style="border:1px solid black;">
+
+        <tr>
+        <th>Name</th>
+        <th>Planning Time</th>
+        <th>Self Estimated Time</th>
+        <th>Estimated Time By Calc</th>
+        <th>Real Time HH:SS</th>
+        <th>Risk</th>
+        <th>Level</th>
+        <th>Correctness %</th>
+        <th>Notes</th>
+        </tr>
+
+        {% for task in tasks %}
+            <tr>
+                <td style="border:1px solid black;">{{task.task_name}}</td>
+                <td style="border:1px solid black;">{{task.planning_time|date:"H:i:s" }}</td>
+                <td style="border:1px solid black;">{{task.self_estimated_time|date:"H:i:s"}}</td>
+                <td style="border:1px solid black;">{% estimate_time task.real_time_spent task.self_estimated_time %}</td>
+                <td style="border:1px solid black;">{{task.real_time_spent|date:"H:i:s"}}</td>
+                <td style="border:1px solid black;">{{task.risk}}</td>
+                <td style="border:1px solid black;">{{task.level}}</td>
+                <td style="border:1px solid black;">{% calculate_correctness_ratio task.real_time_spent task.self_estimated_time %}%</td>
+                <td style="border:1px solid black;">{{task.notes}}</td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+{% endif %}
