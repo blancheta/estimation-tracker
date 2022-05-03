@@ -1,6 +1,15 @@
 {% load custom_tags %}
 
-<a href={% url 'create_task' %}>Create Task</a>
+<div style="padding:20px 10%;">
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        
+        <input type="submit"/>
+    </form>
+    
+<div>
 
 
 {% if tasks %}
