@@ -39,6 +39,7 @@
                 <td style="border:1px solid black;">{{task.level}}</td>
                 <td style="border:1px solid black;">{% calculate_correctness_ratio task.real_time_spent task.self_estimated_time %}%</td>
                 <td style="border:1px solid black;">{{task.notes}}</td>
+                <td style="border:1px solid black;"><a href="{% url 'edit_form' task.id %}">Edit</a></td>
             </tr>
         {% endfor %}
 
