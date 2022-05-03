@@ -5,16 +5,18 @@ import math
 register = template.Library()
 
 
-def convert_time_to_seconds(time: datetime.time) -> int:
-    seconds = (time.hour * 60 + time.minute) * 60 + time.second
-
+def convert_time_to_seconds(time: datetime.time) -> float:
+    seconds = datetime.timedelta(
+        hours=time.hour, minutes=time.minute, seconds=time.second
+    ).total_seconds()
+    
     return seconds
 
 
 def calculate_correctness_ratio(
     task_real_time: datetime.time, task_self_estimated_time: datetime.time
 ) -> int:
-    
+
     real_time_seconds = convert_time_to_seconds(task_real_time)
     estimated_time_seconds = convert_time_to_seconds(task_self_estimated_time)
 
@@ -24,7 +26,7 @@ def calculate_correctness_ratio(
 def estimate_time(
     task_real_time: datetime.time, task_self_estimated_time: datetime.time
 ) -> datetime.time:
-    
+
     correctness_ratio = calculate_correctness_ratio(
         task_real_time, task_self_estimated_time
     )
