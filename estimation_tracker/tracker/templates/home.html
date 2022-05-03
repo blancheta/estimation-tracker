@@ -33,11 +33,23 @@
                 <td style="border:1px solid black;">{{task.task_name}}</td>
                 <td style="border:1px solid black;">{{task.planning_time|date:"H:i:s" }}</td>
                 <td style="border:1px solid black;">{{task.self_estimated_time|date:"H:i:s"}}</td>
-                <td style="border:1px solid black;">{% estimate_time task.real_time_spent task.self_estimated_time %}</td>
+                <td style="border:1px solid black;">
+                    {% if task.real_time_spent %}
+                        {% estimate_time task.real_time_spent task.self_estimated_time %}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
                 <td style="border:1px solid black;">{{task.real_time_spent|date:"H:i:s"}}</td>
                 <td style="border:1px solid black;">{{task.risk}}</td>
                 <td style="border:1px solid black;">{{task.level}}</td>
-                <td style="border:1px solid black;">{% calculate_correctness_ratio task.real_time_spent task.self_estimated_time %}%</td>
+                <td style="border:1px solid black;">
+                    {% if task.real_time_spent %}
+                        {% calculate_correctness_ratio task.real_time_spent task.self_estimated_time %}%
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
                 <td style="border:1px solid black;">{{task.notes}}</td>
                 <td style="border:1px solid black;"><a href="{% url 'edit_form' task.id %}">Edit</a></td>
             </tr>
