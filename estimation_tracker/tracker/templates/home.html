@@ -1,0 +1,62 @@
+{% load custom_tags %}
+
+<div style="padding:20px 10%;">
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        
+        <input type="submit"/>
+    </form>
+    
+<div>
+
+
+{% if tasks %}
+
+    <table style="border:1px solid black;">
+
+        <tr>
+        <th>Name</th>
+        <th>Planning Time</th>
+        <th>Self Estimated Time</th>
+        <th>Estimated Time By Calc</th>
+        <th>Real Time HH:SS</th>
+        <th>Risk</th>
+        <th>Level</th>
+        <th>Correctness %</th>
+        <th>Notes</th>
+        </tr>
+
+        {% for task in tasks %}
+            <tr>
+                <td style="border:1px solid black;">{{task.task_name}}</td>
+                <td style="border:1px solid black;">{{task.planning_time|date:"H:i:s" }}</td>
+                <td style="border:1px solid black;">{{task.self_estimated_time|date:"H:i:s"}}</td>
+                <td style="border:1px solid black;">
+                    {% if task.real_time_spent %}
+                        {% estimate_time task.real_time_spent task.self_estimated_time %}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td style="border:1px solid black;">{{task.real_time_spent|date:"H:i:s"}}</td>
+                <td style="border:1px solid black;">{{task.risk}}</td>
+                <td style="border:1px solid black;">{{task.level}}</td>
+                <td style="border:1px solid black;">
+                    {% if task.real_time_spent %}
+                        {% calculate_correctness_ratio task.real_time_spent task.self_estimated_time %}%
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td style="border:1px solid black;">{{task.notes}}</td>
+                <td style="border:1px solid black;"><a href="{% url 'edit_form' task.id %}">Edit</a></td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+{% else %}
+    <h1>Currently, there are no tasks. Please add some first.</h1>
+{% endif %}
