@@ -30,14 +30,19 @@ RISK_CHOICES= [
     ('Risky', 'Risky'),
     ('Very risky', 'Very risky')
 ]
-
+# TODO: Two blank lines
 class Task(models.Model):
+    # TODO: How did you choose this max_length?
     name = models.CharField(max_length=1024)
     planning_time = models.TimeField()
     self_estimated_time = models.TimeField()
+    # TODO: Could real_time_spent be null?
     real_time_spent = models.TimeField(null=True, blank=True)
+    # TODO: Could complexity_level be null?
     complexity_level = models.CharField(max_length=6, choices=LEVEL_CHOICES, null=True, blank=True)
+    # TODO: Could risk_of_exceeding_time be null?
     risk_of_exceeding_time = models.CharField(max_length=10, choices=RISK_CHOICES, null=True, blank=True)
+    # TODO: Could correctness be null?
     correctness = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     estimated_time_by_calc = models.TimeField(null=True)
     notes = models.TextField(null=True, blank=True)
