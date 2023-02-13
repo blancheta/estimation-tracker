@@ -16,7 +16,7 @@
     
         </div>
         <div class='container'>
-            {% if tasks %}
+            {% if object_list %}
             <h3>Tasks</h3>
             <table class="table">
                 <tr>
@@ -30,7 +30,7 @@
                     <th>Correctness %</th>
                     <th>Notes</th>
                 </tr>
-                {% for t in tasks %}
+                {% for t in object_list %}
                 <tr>
                     <td> {{ t.name }}</td>
                     <td> {{ t.planning_time|time:"H:i:s" }}</td>
