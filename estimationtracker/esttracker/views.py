@@ -13,4 +13,5 @@ class TaskCreateListView(BaseCreateView, ListView):
     success_url = reverse_lazy("task_create_list")
 
     def get_queryset(self):
+        # get queryset
         return Task.objects.all().order_by("created_at")
