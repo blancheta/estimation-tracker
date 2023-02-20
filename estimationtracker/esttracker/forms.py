@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Task
-from .utils import get_correctness, get_estimation_time
+from .utils import calculate_correctness_ratio, get_estimation_time_by_calc
 
 
 class CreateTask(forms.ModelForm):
@@ -33,10 +33,10 @@ class CreateTask(forms.ModelForm):
         task = super(CreateTask, self).save(*args, commit=False)
         if self.is_valid() and self.cleaned_data["real_time_spent"]:
             # calculate estimated_time_by_calc & correctness before savibng
-            task.estimated_time_by_calc = get_estimation_time(
+            task.estimated_time_by_calc = get_estimation_time_by_calc(
                 self.cleaned_data["self_estimated_time"]
             )
-            task.correctness = get_correctness(
+            task.correctness = calculate_correctness_ratio(
                 self.cleaned_data["real_time_spent"],
                 self.cleaned_data["self_estimated_time"],
             )

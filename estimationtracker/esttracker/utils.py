@@ -6,7 +6,7 @@ from django.db.models import Avg
 from .models import Task
 
 
-def time_in_sec(time_obj: datetime.time) -> int:
+def convert_time_to_seconds(time_obj: datetime.time) -> int:
     """
     It takes a time object and returns the total time in seconds.
 
@@ -20,16 +20,22 @@ def time_in_sec(time_obj: datetime.time) -> int:
     return total_time_sec
 
 
-def get_correctness(real_time: datetime.time, estimated_time: datetime.time) -> float:
+def calculate_correctness_ratio(
+    real_time: datetime.time, estimated_time: datetime.time
+) -> float:
     """
     It takes two time objects and returns what percentage is the real time compared to the estimated time.
 
     :return: A float ratio of the real time compared to the estimated time.
     """
-    return (time_in_sec(real_time) / time_in_sec(estimated_time)) * 100
+    return (
+        convert_time_to_seconds(real_time) / convert_time_to_seconds(estimated_time)
+    ) * 100
 
 
-def get_estimation_time(estimated_time: datetime.time) -> Union[str, None]:
+def get_estimation_time_by_calc(
+    estimated_time: datetime.time,
+) -> Union[str, None]:
     """
     It takes a time object and returns a string of the estimated time based on the average correctness
     of all tasks
@@ -45,7 +51,7 @@ def get_estimation_time(estimated_time: datetime.time) -> Union[str, None]:
         estimated_by_calc_sec = (
             round(avg_correctness["avg_correctness"])
             / 100
-            * time_in_sec(estimated_time)
+            * convert_time_to_seconds(estimated_time)
         )
         estimated_by_calc = str(datetime.timedelta(seconds=estimated_by_calc_sec))
     else:
